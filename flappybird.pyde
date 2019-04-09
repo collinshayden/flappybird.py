@@ -1,10 +1,4 @@
 import random
-Pole1X=0
-Pole1Y=0
-Pole2X=0
-Pole2Y=0
-BirdX=0
-BirdY=0
 class pole(object):#creates class
     def __init__(self,x,y,w,h,speed):#constructor with inputs
         self.r = random.randint(100,180)#chooses random int between 100,180
