@@ -4,7 +4,7 @@ class pole(object):#creates class
         self.r = random.randint(100,180)#chooses random int between 100,180
         self.x = x+w#makes the pole start off screen
         self.y = y
-        self.y2 = 500-self.r
+        self.y2 = 500-self.r#sets the y of bottom rectangle at canvas height-rect height
         self.w = w
         self.h = self.r#sets random height
         self.speed = speed
@@ -25,23 +25,23 @@ class pole(object):#creates class
 
 class bird(object):
     def __init__(self,x,y,w,h):
+        #sets class variables(local)
         self.x = x
         self.y = y
         self.w = w
         self.h = h
 
     def move(self):
-        self.y+=4
-        if(keyPressed):
-            self.y-=15  
+        self.y+=4#sets bird to fall at 4px/loop
+        if(keyPressed):#if any key is pressed
+            self.y-=15#bird goes up 15px  
 
     def display(self):
-        fill(0,0,255)
+        fill(0,0,255)#blue
         rect(self.x,self.y,self.w,self.h)
 
-
 Pole1 = pole(500,0,50,150,-3)#x,y,w,h,speed
-Pole2 = pole(800,0,50,150,-3)
+Pole2 = pole(800,0,50,150,-3)#x,y,w,h,speed
 Bird = bird(50,250,20,20)#x,y,w,h
 
 def endgame():
@@ -51,26 +51,30 @@ def collision():
     #if bird hits pole 1:
     if((Bird.x>Pole1.x and Bird.y>Pole1.y and Bird.y<Pole1.y+Pole1.h) or (Bird.x>Pole1.x and Bird.y>Pole1.y2 and Bird.y<Pole1.y2+Pole1.h)):
         print('hit pole 1')
-        endgame()
+        endgame()#calls endgame function
         
     #if bird hits pole 2
     if((Bird.x>Pole2.x and Bird.y>Pole2.y and Bird.y<Pole2.y+Pole2.h) or (Bird.x>Pole2.x and Bird.y>Pole2.y2 and Bird.y<Pole2.y2+Pole2.h)):
         print('hit pole 2')
         endgame()
+        
     #if bird hits top or bottom of canvas:
     if(Bird.y<0 or Bird.y>500-Bird.w):
         print('hit top/bottom')
         endgame()
+
 def setup():
-    size(500,500)
+    size(500,500)#canvas size
 
 def draw(): 
     background(200)
+    #calling class methods
     pole.move(Pole1)
     pole.display(Pole1)
     pole.move(Pole2)
     pole.display(Pole2)
     bird.move(Bird)
     bird.display(Bird)
+    #calling functions
     collision()
     
