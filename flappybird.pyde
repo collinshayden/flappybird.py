@@ -3,30 +3,32 @@ numScore = 0#assigns numScore to 0
 
 class pole(object):#creates class
     def __init__(self,x):#constructor with inputs
-        self.spacing = 125
-        self.ran = random.randint(self.spacing, 500 - self.spacing);
-        #TOP AND BOTTOM ARE HEIGHTS OF RECT
-        self.top = self.ran - self.spacing/2#
-        self.bottom = 500 - (self.ran + self.spacing)
+        self.spacing = 125#base distance between top and bottom rects
+        self.ran = random.randint(self.spacing, 500 - self.spacing);#random int to determine distance
+    
+        self.top = self.ran - self.spacing/2#this is the height of top rect
+        self.bottom = 500 - (self.ran + self.spacing)#this is the height of bottom rect
         
-        self.x = x
-        self.w = 80
-        self.speed = -3
+        self.x = x#sets x to x from when the object is created
+        self.w = 80#width
+        self.speed = -3#speed of poles
     
     def move(self):#needs to call self as first instance  
         self.x += self.speed#similar to this. in JS
         if(self.x<-self.w):#if x goes past 0-width of pole
+            #choses a new random space between top and bottom
             self.ran = random.randint(self.spacing, 500 - self.spacing/2);#make another random integer
             self.top = self.ran - self.spacing/2#
             self.bottom = 500 - (self.ran + self.spacing)
+            
             self.x = 500+self.w#move the pole back off screen
             
     def display(self):
         stroke(0)#stroke color = black
         strokeWeight(1.5)#strokeweight
         fill(255,0,0)#fill RGB
-        rect(self.x,0,self.w,self.top)
-        rect(self.x,500-self.bottom,self.w,self.bottom)
+        rect(self.x,0,self.w,self.top)#x,y,w,h
+        rect(self.x,500-self.bottom,self.w,self.bottom)#x,y,w,h
 
 class bird(object):
     def __init__(self,x,y,w,h):
@@ -43,7 +45,7 @@ class bird(object):
 
     def display(self):
         fill(0,0,255)#blue
-        ellipse(self.x,self.y,self.w,self.h)
+        ellipse(self.x,self.y,self.w,self.h)#circle
         
 Pole = pole(500)#x,y,w,h,speed
 Pole2 = pole(850)#x,y,w,h,speed
@@ -53,8 +55,8 @@ def endgame():#function when bird dies
     Bird.y = 250#resets bird y to start pos
     global numScore#calls global var 
     numScore = 0#resets score
-    Pole.x = 500
-    Pole2.x = 850
+    Pole.x = 500#resets first pole to off screen
+    Pole2.x = 850#resets second pole to off screen
     
 def collision():
     #if bird hits pole:
