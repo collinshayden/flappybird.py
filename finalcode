@@ -1,0 +1,279 @@
+
+import random  # imports random library
+numScore = 0  # assigns numScore to 0
+
+
+class pole(object):  # creates class
+
+    def __init__(self, x):  # constructor with inputs
+        self.spacing = 125  # base distance between top and bottom rects
+        self.ran = random.randint(self.spacing, 500 - self.spacing)
+        # random int to determine distance
+
+        # this is the height of top rect
+        self.top = self.ran - self.spacing / 2
+        # this is the height of bottom rect
+        self.bottom = 500 - (self.ran + self.spacing)
+
+        self.x = x  # sets x to x from when the object is created
+        self.w = 80  # width
+        self.speed = -3  # speed of poles
+
+    def move(self):  # needs to call self as first instance
+        self.x += self.speed  # similar to this. in JS
+        if(self.x < -self.w):  # if x goes past 0-width of pole
+            # choses a new random space between top and bottom
+            self.ran = random.randint(self.spacing, 500 - self.spacing / 2)
+            # make another random integer
+            self.top = self.ran - self.spacing / 2
+            self.bottom = 500 - (self.ran + self.spacing)
+
+            self.x = 500 + self.w  # move the pole back off screen
+
+    def display(self):
+        stroke(0)  # stroke color = black
+        strokeWeight(1.5)  # strokeweight
+        fill(255, 0, 0)  # fill RGB
+        rect(self.x, 0, self.w, self.top)  # x,y,w,h
+        rect(self.x, 500 - self.bottom, self.w, self.bottom)  # x,y,w,h
+#-------------------------------------END class pole
+class bird(object):
+
+    def __init__(self, x, y, w, h):
+        # sets class variables(local)
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def move(self):
+        self.y += 3  # sets bird to fall at 4px/loop
+        if(keyPressed):  # if any key is pressed
+            self.y -= 15  # bird goes up 15px
+
+    def display(self):
+        fill(0, 0, 255)  # blue
+        ellipse(self.x, self.y, self.w, self.h)  # circle
+#-------------------------------------END class bird
+
+Pole = pole(500)  # x,y,w,h,speed
+Pole2 = pole(850)  # x,y,w,h,speed
+Bird = bird(50, 250, 20, 20)  # x,y,w,h
+#-------------------------------------END class assignment
+
+def endgame():  # function when bird dies
+    Bird.y = 250  # resets bird y to start pos
+    global numScore  # calls global var
+    numScore = 0  # resets score
+    Pole.x = 500  # resets first pole to off screen
+    Pole2.x = 850  # resets second pole to off screen
+#-------------------------------------END function endgame
+def collision():
+    # if bird hits pole:
+    if(Bird.x > Pole.x and Bird.x < Pole.x + Pole.w and Bird.y > 0 and Bird.y < Pole.top or Bird.x > Pole.x and Bird.y < 500 and Bird.y > 500 - Pole.bottom):
+        print('hit pole')
+        endgame()  # calls endgame function
+
+    # if bird hits second pole
+    if(Bird.x > Pole2.x and Bird.x < Pole2.x + Pole2.w and Bird.y > 0 and Bird.y < Pole2.top or Bird.x > Pole2.x and Bird.y < 500 and Bird.y > 500 - Pole2.bottom):
+        print('hit pole')
+        endgame()  # calls endgame function
+
+    # if bird hits top or bottom of canvas:
+    if(Bird.y < 0 or Bird.y > 500 - Bird.w):
+        print('hit top or bottom')
+        endgame()
+#-------------------------------------END function collision
+def score():
+    fill(0, 0, 255)  # blue
+    textSize(32)  # sets size of text
+    text("score:", 0, 25)  # displays "score:"
+    global numScore  # calls global var
+    text(numScore, 100, 27)  # displays numScore
+# if the bird passes a pole:
+    if(Bird.x > Pole.x - 2 and Bird.x < Pole.x + 2 or Bird.x > Pole2.x - 2 and Bird.x < Pole2.x + 2):
+        print(numScore)  # print the score
+        numScore += 1  # add one to the score
+#-------------------------------------END function score
+
+class matrix(object):#NOTE: rows and columns are flipped, so rows across, cols down
+    # syntax for this class:
+        # matrix.add(object name, number to add)    to add every element by n
+        # matrix.multiply(object name, number to multiply)    to multiply every element by n
+        # matrix.randomize(object name)     to set values in a matrix to a random num between 0 and 1
+        # matrix.randomizeRange(object name, a, b)     to create random values between a and b for every element
+        # m.matrix[0][1] = x    to set index 0,1 to x
+        # print(objectname.matrix)     to print a matrix
+
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols
+
+        # makes self.matrix into a list with the length of rows
+        self.matrix = [i for i in range(self.rows)]
+
+        # for loop runs length of rows
+        for i in range(0, self.rows, 1):
+            # fills the matrix with cols to make the two dimensional array
+            self.matrix[i] = [j for j in range(self.cols)]
+            # now it should be like [[0,1,2],[0,1,2],[0,1,2]] or something
+            # similar
+
+    def add(self, n):  # this adds n to every element in the array
+        if(isinstance(n, matrix)):
+        
+            for i in range(0, self.rows, 1):
+                for j in range(0, self.rows, 1):
+                    # adds each element in matrix
+                    self.matrix[i][j] += n.matrix[i][j]
+        else:
+            for i in range(0, self.rows, 1):
+                for j in range(0, self.cols, 1):
+                    self.matrix[i][j] += n#adds n to each element in matrix
+
+    def multiply(self, n):  # multiplies by 
+        if(isinstance(n, matrix)):  # checks if muliplier is a matrix
+            rows_A = len(self.matrix)
+            cols_A = len(self.matrix[0])
+            rows_B = len(n.matrix)
+            cols_B = len(n.matrix[0])
+            # checks if the cols of A do not match the rows of B
+            if(cols_A != rows_B):
+                raise ValueError("Col A must match Row B")
+
+            result = [[0 for row in range(rows_A)] for col in range(cols_B)]
+            for i in range(0, rows_A):
+                for j in range(0, cols_B):
+                    for k in range(0, rows_B):
+                        result[i][j] += self.matrix[i][k] * n.matrix[k][j]
+            print(result)
+
+        else:
+            for i in range(0, self.rows, 1):
+                for j in range(0, self.cols, 1):
+                    # multiplies every element of the matrix by n
+                    self.matrix[i][j] *= n
+        
+    #sets every value in the matrix to a random integer between A and B
+    def randomizeRange(self, a, b):
+        for i in range(0, self.rows, 1):
+            for j in range(0, self.cols, 1):
+                self.matrix[i][j] = random.randint(a, b)
+                
+    #sets every value in the matrix to a random # between 0 and 1
+    def randomize(self):
+        for i in range(0, self.rows, 1):
+            for j in range(0, self.cols, 1):
+                self.matrix[i][j] = random.random()
+    
+    def map(self,func):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                val = self.matrix[i][j]
+                self.matrix[i][j] = func(val)
+                
+#input A and B, multiplies them, and outputs A
+def arrayMultiply(arr1,arr2):
+    if(len(arr1) != len(arr2)):
+        raise ValueError("Arrays must be equal in length") 
+    else:
+        for i in range(len(arr1)):
+            arr1[i] = arr1[i] * arr2[i]
+        
+def arrayAdd(arr1,arr2):
+    if(len(arr1) != len(arr2)):
+        raise ValueError("Arrays must be equal in length") 
+    else:
+        for i in range(len(arr1)):
+            arr1[i] = arr1[i] + arr2[i]
+
+#-------------------------------------END class matrix
+
+        #self.input1 = Bird.x
+        #self.input2 = Bird.y
+        #self.input3 = Pole.x
+        #self.input4 = Pole2.x
+        #self.input5 = Pole.bottom
+        #self.input6 = Pole2.bottom
+        #self.weights1 = 0
+        #self.weights2 = 0
+        #self.output = 0
+class NeuralNetwork(object):
+
+    def __init__(self, input_nodes, hidden_nodes, output_nodes,inputArray):
+        self.input_nodes = input_nodes
+        self.hidden_nodes = hidden_nodes
+        self.output_nodes = output_nodes
+        
+        #input = matrix(1,len(inputArray))
+        #matrix.multiply(input,0)
+        #for i in range(len(inputArray)):
+            #input.matrix[0][i] = inputArray[i]
+    
+
+    #creating matices for weights
+        self.weights_ih = matrix(self.input_nodes, self.hidden_nodes)
+        self.weights_ho = matrix(self.hidden_nodes, self.output_nodes)
+        
+    #setting matrix elements to 0
+        matrix.multiply(self.weights_ih,0)
+        matrix.multiply(self.weights_ho,0)
+        
+    #assigning random values to matrix elements
+        matrix.randomize(self.weights_ih)
+        matrix.randomize(self.weights_ho)
+        
+    #multiplies the random weights by the inputs
+        for i in range(len(self.weights_ih.matrix)):
+            arrayMultiply(self.weights_ih.matrix[i],inputArray)
+                
+    #creating matrices for bias
+        self.bias_h = matrix(1, self.hidden_nodes)#1x6
+        self.bias_o = matrix(1, self.output_nodes)#1x6
+        
+    #set bias values
+        matrix.multiply(self.bias_h,0)#sets values to 0
+        matrix.add(self.bias_h,1)#sets values to 1
+
+    #add bias to weight matrix
+        for i in range(len(self.bias_h.matrix)):
+            arrayAdd(self.weights_ih.matrix[i], self.bias_h.matrix[0])
+        
+    def feedforward(self):
+        hidden = self.weights_ih
+        matrix.map(hidden, sigmoid)
+    def backprop(self):
+        pass
+        
+
+def sigmoid(x):
+    e = 2.71828
+    y = 1/(1+(e**-x))
+    print(y)
+
+
+
+#-------------------------------------END class nn
+def setup():
+    size(500, 500)  # canvas size
+    
+inputArray = [Bird.x,Bird.y,Pole.x,Pole.bottom,Pole2.x,Pole2.bottom]#all inputs go here
+nn = NeuralNetwork(6,6,1,inputArray)
+    
+    
+#-------------------------------------END function setup
+def draw():
+    background(200)
+
+    # calling class methods
+    pole.move(Pole)
+    pole.display(Pole)
+    pole.move(Pole2)
+    pole.display(Pole2)
+    bird.move(Bird)
+    bird.display(Bird)
+    # calling functions
+    collision()
+    score()
+    NeuralNetwork.feedforward(nn)
+#-------------------------------------END function draw
