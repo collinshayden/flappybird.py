@@ -241,7 +241,7 @@ class NeuralNetwork(object):
         
     def feedforward(self):
         hidden = self.weights_ih
-        matrix.map(hidden, sigmoid)
+       # matrix.map(hidden, sigmoid)
     def backprop(self):
         pass
         
