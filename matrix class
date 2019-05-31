@@ -1,0 +1,90 @@
+class matrix(object):#NOTE: rows and columns are flipped, so rows across, cols down
+    # syntax for this class:
+        # matrix.add(object name, number to add)    to add every element by n
+        # matrix.multiply(object name, number to multiply)    to multiply every element by n
+        # matrix.randomize(object name)     to set values in a matrix to a random num between 0 and 1
+        # matrix.randomizeRange(object name, a, b)     to create random values between a and b for every element
+        # m.matrix[0][1] = x    to set index 0,1 to x
+        # print(objectname.matrix)     to print a matrix
+
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols
+
+        # makes self.matrix into a list with the length of rows
+        self.matrix = [i for i in range(self.rows)]
+
+        # for loop runs length of rows
+        for i in range(0, self.rows, 1):
+            # fills the matrix with cols to make the two dimensional array
+            self.matrix[i] = [j for j in range(self.cols)]
+            # now it should be like [[0,1,2],[0,1,2],[0,1,2]] or something
+            # similar
+
+    def add(self, n):  # this adds n to every element in the array
+        if(isinstance(n, matrix)):
+        
+            for i in range(0, self.rows, 1):
+                for j in range(0, self.rows, 1):
+                    # adds each element in matrix
+                    self.matrix[i][j] += n.matrix[i][j]
+        else:
+            for i in range(0, self.rows, 1):
+                for j in range(0, self.cols, 1):
+                    self.matrix[i][j] += n#adds n to each element in matrix
+
+    def multiply(self, n):  # multiplies by 
+        if(isinstance(n, matrix)):  # checks if muliplier is a matrix
+            rows_A = len(self.matrix)
+            cols_A = len(self.matrix[0])
+            rows_B = len(n.matrix)
+            cols_B = len(n.matrix[0])
+            # checks if the cols of A do not match the rows of B
+            if(cols_A != rows_B):
+                raise ValueError("Col A must match Row B")
+
+            result = [[0 for row in range(rows_A)] for col in range(cols_B)]
+            for i in range(0, rows_A):
+                for j in range(0, cols_B):
+                    for k in range(0, rows_B):
+                        result[i][j] += self.matrix[i][k] * n.matrix[k][j]
+            print(result)
+
+        else:
+            for i in range(0, self.rows, 1):
+                for j in range(0, self.cols, 1):
+                    # multiplies every element of the matrix by n
+                    self.matrix[i][j] *= n
+        
+    #sets every value in the matrix to a random integer between A and B
+    def randomizeRange(self, a, b):
+        for i in range(0, self.rows, 1):
+            for j in range(0, self.cols, 1):
+                self.matrix[i][j] = random.randint(a, b)
+                
+    #sets every value in the matrix to a random # between 0 and 1
+    def randomize(self):
+        for i in range(0, self.rows, 1):
+            for j in range(0, self.cols, 1):
+                self.matrix[i][j] = random.random()
+    
+    def map(self,func):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                val = self.matrix[i][j]
+                self.matrix[i][j] = func(val)
+                
+#input A and B, multiplies them, and outputs A
+def arrayMultiply(arr1,arr2):
+    if(len(arr1) != len(arr2)):
+        raise ValueError("Arrays must be equal in length") 
+    else:
+        for i in range(len(arr1)):
+            arr1[i] = arr1[i] * arr2[i]
+        
+def arrayAdd(arr1,arr2):
+    if(len(arr1) != len(arr2)):
+        raise ValueError("Arrays must be equal in length") 
+    else:
+        for i in range(len(arr1)):
+            arr1[i] = arr1[i] + arr2[i]
